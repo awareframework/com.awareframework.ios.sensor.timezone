@@ -7,12 +7,26 @@
 //
 
 import UIKit
+import com_awareframework_ios_sensor_timezone
 
 class ViewController: UIViewController {
 
+    var sensor:TimezoneSensor?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        sensor = TimezoneSensor.init(TimezoneSensor.Config().apply{config in
+            config.debug = true
+            config.sensorObserver = Observer()
+        })
+        sensor?.start()
+    }
+
+    class Observer:TimezoneObserver{
+        func onTimezoneChanged(data: TimezoneData) {
+            print(data)
+        }
     }
 
     override func didReceiveMemoryWarning() {

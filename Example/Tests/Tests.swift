@@ -1,5 +1,5 @@
 import XCTest
-import com.awareframework.ios.sensor.timezone
+import com_awareframework_ios_sensor_timezone
 
 class Tests: XCTestCase {
     
