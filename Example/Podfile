@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'com.awareframework.ios.sensor.timezone_Example' do
+  pod 'com.awareframework.ios.sensor.timezone', :path => '../'
+
+  target 'com.awareframework.ios.sensor.timezone_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
