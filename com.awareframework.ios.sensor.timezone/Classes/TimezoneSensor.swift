@@ -34,23 +34,23 @@ public class TimezoneSensor: AwareSensor {
     /**
      * Received event: Fire it to start the timezone sensor.
      */
-    public static let ACTION_AWARE_TIMEZONE_START = "com.aware.android.sensor.timezone.SENSOR_START"
+    public static let ACTION_AWARE_TIMEZONE_START = "com.aware.sensor.timezone.SENSOR_START"
     
     /**
      * Received event: Fire it to stop the timezone sensor.
      */
-    public static let ACTION_AWARE_TIMEZONE_STOP = "com.aware.android.sensor.timezone.SENSOR_STOP"
+    public static let ACTION_AWARE_TIMEZONE_STOP = "com.aware.sensor.timezone.SENSOR_STOP"
     
     /**
      * Received event: Fire it to sync the data with the server.
      */
-    public static let ACTION_AWARE_TIMEZONE_SYNC = "com.aware.android.sensor.timezone.SYNC"
+    public static let ACTION_AWARE_TIMEZONE_SYNC = "com.aware.sensor.timezone.SYNC"
     
     /**
      * Received event: Fire it to set the data label.
      * Use [EXTRA_LABEL] to send the label string.
      */
-    public static let ACTION_AWARE_TIMEZONE_SET_LABEL = "com.aware.android.sensor.timezone.SET_LABEL"
+    public static let ACTION_AWARE_TIMEZONE_SET_LABEL = "com.aware.sensor.timezone.SET_LABEL"
     
     /**
      * Label string sent in the intent extra.
@@ -65,7 +65,7 @@ public class TimezoneSensor: AwareSensor {
      * Current configuration of the [TimezoneSensor]. Some changes in the configuration will have
      * immediate effect.
      */
-    var CONFIG: Config = Config()
+    public var CONFIG: Config = Config()
     
     public class Config:SensorConfig{
         public var sensorObserver:TimezoneObserver? = nil
