@@ -5,12 +5,10 @@
 [![License](https://img.shields.io/cocoapods/l/com.awareframework.ios.sensor.timezone.svg?style=flat)](https://cocoapods.org/pods/com.awareframework.ios.sensor.timezone)
 [![Platform](https://img.shields.io/cocoapods/p/com.awareframework.ios.sensor.timezone.svg?style=flat)](https://cocoapods.org/pods/com.awareframework.ios.sensor.timezone)
 
-## Example
-
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+The timezone sensor keeps track of the user’s current timezone.
 
 ## Requirements
-iOS10 or later
+iOS 10 or later
 
 ## Installation
 
@@ -25,6 +23,49 @@ pod 'com.awareframework.ios.sensor.timezone'
 ```swift
 import com_awareframework_ios_sensor_timezone 
 ```
+
+## Public functions
+
+### TimezoneSensor
+
+* `init(config:TimezoneSensor.Config?)` : Initializes the timezone sensor with the optional configuration.
+* `start()`: Starts the gyroscope sensor with the optional configuration.
+* `stop()`: Stops the service.
+
+
+### TimezoneSensor.Config
+
+Class to hold the configuration of the sensor.
+
+#### Fields
+
++ `sensorObserver: TimezoneObserver`: Callback for live data updates.
++ `enabled: Boolean` Sensor is enabled or not. (default = `false`)
++ `debug: Boolean` enable/disable logging to `Logcat`. (default = `false`)
++ `label: String` Label for the data. (default = "")
++ `deviceId: String` Id of the device that will be associated with the events and the sensor. (default = "")
++ `dbEncryptionKey` Encryption key for the database. (default = `null`)
++ `dbType: Engine` Which db engine to use for saving data. (default = `Engine.DatabaseType.NONE`)
++ `dbPath: String` Path of the database. (default = "aware_timezone")
++ `dbHost: String` Host for syncing the database. (default = `null`)
+
+## Broadcasts
+
++ `TimezoneSensor.ACTION_AWARE_TIMEZONE` broadcasted when there is new timezone information. Extra includes `TimezoneSensor.EXTRA_DATA` for the new timezone.
+
+## Data Representations
+
+### Timezone Data
+
+| Field      | Type   | Description                                                                  |
+| ---------- | ------ | ---------------------------------------------------------------------------- |
+| timezoneId | String | the timezone ID string, i.e., “America/Los_Angeles, GMT-08:00”  |
+| deviceId   | String | AWARE device UUID                                                            |
+| label      | String | Customizable label. Useful for data calibration or traceability              |
+| timestamp  | Long   | unixtime milliseconds since 1970                                             |
+| timezone   | Int    | Timezone of the device                                                       |
+| os         | String | Operating system of the device (ex. android)                                 |
+
 ## Example usage
 
 ```swift
