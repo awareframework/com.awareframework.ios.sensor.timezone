@@ -75,10 +75,6 @@ public class TimezoneSensor: AwareSensor {
             dbPath = "aware_timezone"
         }
         
-        public convenience init(_ json:JSON){
-            self.init()
-        }
-        
         public func apply(closure: (_ config:TimezoneSensor.Config) -> Void) -> Self{
             closure(self)
             return self

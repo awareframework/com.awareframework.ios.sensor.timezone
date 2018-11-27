@@ -1,4 +1,4 @@
-# Aware Timezone
+# AWARE: Timezone
 
 [![CI Status](https://img.shields.io/travis/awareframework/com.awareframework.ios.sensor.timezone.svg?style=flat)](https://travis-ci.org/awareframework/com.awareframework.ios.sensor.timezone)
 [![Version](https://img.shields.io/cocoapods/v/com.awareframework.ios.sensor.timezone.svg?style=flat)](https://cocoapods.org/pods/com.awareframework.ios.sensor.timezone)
@@ -29,7 +29,7 @@ import com_awareframework_ios_sensor_timezone
 ### TimezoneSensor
 
 * `init(config:TimezoneSensor.Config?)` : Initializes the timezone sensor with the optional configuration.
-* `start()`: Starts the gyroscope sensor with the optional configuration.
+* `start()`: Starts the timezone sensor with the optional configuration.
 * `stop()`: Stops the service.
 
 
@@ -87,7 +87,7 @@ class Observer:TimezoneObserver{
 
 ## Author
 
-Yuuki Nishiyama, tetujin@ht.sfc.keio.ac.jp
+Yuuki Nishiyama, yuuki.nishiyama@oulu.fi
 
 ## License
 
