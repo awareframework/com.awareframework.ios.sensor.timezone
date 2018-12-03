@@ -95,6 +95,7 @@ public class TimezoneSensor: AwareSensor {
             self.timer = Timer.scheduledTimer(withTimeInterval: hour, repeats: true, block: { timer in
                 self.retrieveTimezone()
             })
+            self.timer?.fire()
         }
         self.notificationCenter.post(name:.actionAwareTimezoneStart, object:nil)
     }
