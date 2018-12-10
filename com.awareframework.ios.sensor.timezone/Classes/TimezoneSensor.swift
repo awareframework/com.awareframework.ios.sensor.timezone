@@ -15,6 +15,8 @@ extension Notification.Name{
     public static let actionAwareTimezoneStop = Notification.Name(TimezoneSensor.ACTION_AWARE_TIMEZONE_STOP)
     public static let actionAwareTimezoneSync = Notification.Name(TimezoneSensor.ACTION_AWARE_TIMEZONE_SYNC)
     public static let actionAwareTimezoneSetLabel = Notification.Name(TimezoneSensor.ACTION_AWARE_TIMEZONE_SET_LABEL)
+    public static let actionAwareTimezoneSyncCompletion  = Notification.Name(TimezoneSensor.ACTION_AWARE_TIMEZONE_SYNC_COMPLETION)
+
 }
 
 public protocol TimezoneObserver {
@@ -45,6 +47,10 @@ public class TimezoneSensor: AwareSensor {
      * Received event: Fire it to sync the data with the server.
      */
     public static let ACTION_AWARE_TIMEZONE_SYNC = "com.awareframework.ios.sensor.timezone.SYNC"
+    
+    public static let ACTION_AWARE_TIMEZONE_SYNC_COMPLETION = "com.awareframework.ios.sensor.timezone.SENSOR_SYNC_COMPLETION"
+    public static let EXTRA_STATUS = "status"
+    public static let EXTRA_ERROR = "error"
     
     /**
      * Received event: Fire it to set the data label.
@@ -100,7 +106,7 @@ public class TimezoneSensor: AwareSensor {
                 self.retrieveTimezone()
             })
             self.timer?.fire()
-            self.notificationCenter.post(name:.actionAwareTimezoneStart, object:nil)
+            self.notificationCenter.post(name:.actionAwareTimezoneStart, object: self)
         }
     }
     
@@ -108,7 +114,7 @@ public class TimezoneSensor: AwareSensor {
         if let t = self.timer{
             t.invalidate()
             self.timer = nil
-            self.notificationCenter.post(name:.actionAwareTimezoneStop, object:nil)
+            self.notificationCenter.post(name:.actionAwareTimezoneStop, object: self)
         }
     }
     
@@ -116,12 +122,22 @@ public class TimezoneSensor: AwareSensor {
         if let engine = self.dbEngine{
             engine.startSync(TimezoneData.TABLE_NAME, TimezoneData.self, DbSyncConfig.init().apply{config in
                 config.debug = self.CONFIG.debug
+                config.dispatchQueue = DispatchQueue(label: "com.awareframework.ios.sensor.timezone.sync.queue")
+                config.completionHandler = { (status, error) in
+                    var userInfo: Dictionary<String,Any> = [TimezoneSensor.EXTRA_STATUS :status]
+                    if let e = error {
+                        userInfo[TimezoneSensor.EXTRA_ERROR] = e
+                    }
+                    self.notificationCenter.post(name: .actionAwareTimezoneSyncCompletion ,
+                                                 object: self,
+                                                 userInfo:userInfo)
+                }
             })
-            self.notificationCenter.post(name:.actionAwareTimezoneSync, object:nil)
+            self.notificationCenter.post(name:.actionAwareTimezoneSync, object: self)
         }
     }
     
-    public func retrieveTimezone(){
+    func retrieveTimezone(){
         let currentTimezone = TimeZone.current.identifier
         print(currentTimezone)
         if self.lastTimezone == "" {
@@ -136,13 +152,14 @@ public class TimezoneSensor: AwareSensor {
         self.lastTimezone = currentTimezone
     }
     
-    public func saveTimezoneData(_ timezoneId:String) {
+    func saveTimezoneData(_ timezoneId:String) {
         
         let tzData = TimezoneData()
         tzData.timezoneId = timezoneId
+        tzData.label = self.CONFIG.label
         
         if let engine = self.dbEngine{
-            engine.save(tzData, TimezoneData.TABLE_NAME)
+            engine.save(tzData)
         }
         
         if let observer = self.CONFIG.sensorObserver {
@@ -150,14 +167,14 @@ public class TimezoneSensor: AwareSensor {
         }
         
         self.notificationCenter.post(name: .actionAwareTimezone,
-                                     object: nil,
+                                     object: self,
                                      userInfo: [TimezoneSensor.EXTRA_DATA:tzData])
     }
     
-    public func set(label:String){
+    public override func set(label:String){
         self.CONFIG.label = label
         self.notificationCenter.post(name: .actionAwareTimezoneSetLabel,
-                                     object: nil,
+                                     object: self,
                                      userInfo:[TimezoneSensor.EXTRA_LABEL:label])
     }
 }

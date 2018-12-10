@@ -1,6 +1,7 @@
 import XCTest
 import RealmSwift
-import com_awareframework_ios_sensor_timezone
+@testable import com_awareframework_ios_sensor_timezone
+import com_awareframework_ios_sensor_core
 
 class Tests: XCTestCase {
 
@@ -15,24 +16,6 @@ class Tests: XCTestCase {
         super.tearDown()
     }
     
-    func testSync(){
-        //        let sensor = TimezoneSensor.init(TimezoneSensor.Config().apply{ config in
-        //            config.debug = true
-        //            config.dbType = .REALM
-        //        })
-        //        sensor.start();
-        //        sensor.enable();
-        //        sensor.sync(force: true)
-        
-        //        let syncManager = DbSyncManager.Builder()
-        //            .setBatteryOnly(false)
-        //            .setWifiOnly(false)
-        //            .setSyncInterval(1)
-        //            .build()
-        //
-        //        syncManager.start()
-    }
-    
     func testStorage(){
         let sensor = TimezoneSensor.init(TimezoneSensor.Config().apply{ config in
             config.dbType = .REALM
@@ -42,7 +25,7 @@ class Tests: XCTestCase {
                                                               object: nil,
                                                               queue: .main) { (notification) in
             if let engine = sensor.dbEngine {
-                if let data = engine.fetch(TimezoneData.TABLE_NAME, TimezoneData.self, nil) as? Results<Object> {
+                if let data = engine.fetch(TimezoneData.self, nil) as? Results<Object> {
                     print(data.count)
                     if data.count != 1{
                         XCTFail()
@@ -139,5 +122,74 @@ class Tests: XCTestCase {
         
         XCTAssertEqual(dict["timezoneId"] as? String, "")
     }
+    
+    
+    func testSyncModule(){
+        #if targetEnvironment(simulator)
+        
+        print("This test requires a real Timezone.")
+        
+        #else
+        // success //
+        let sensor = TimezoneSensor.init(TimezoneSensor.Config().apply{ config in
+            config.debug = true
+            config.dbType = .REALM
+            config.dbHost = "node.awareframework.com:1001"
+            config.dbPath = "sync_db"
+        })
+        if let engine = sensor.dbEngine as? RealmEngine {
+            engine.removeAll(TimezoneData.self)
+            for _ in 0..<100 {
+                engine.save(TimezoneData())
+            }
+        }
+        let successExpectation = XCTestExpectation(description: "success sync")
+        let observer = NotificationCenter.default.addObserver(forName: Notification.Name.actionAwareTimezoneSyncCompletion,
+                                                              object: sensor, queue: .main) { (notification) in
+                                                                if let userInfo = notification.userInfo{
+                                                                    if let status = userInfo["status"] as? Bool {
+                                                                        if status == true {
+                                                                            successExpectation.fulfill()
+                                                                        }
+                                                                    }
+                                                                }
+        }
+        sensor.sync(force: true)
+        wait(for: [successExpectation], timeout: 20)
+        NotificationCenter.default.removeObserver(observer)
+        
+        ////////////////////////////////////
+        
+        // failure //
+        let sensor2 = TimezoneSensor.init(TimezoneSensor.Config().apply{ config in
+            config.debug = true
+            config.dbType = .REALM
+            config.dbHost = "node.awareframework.com.com" // wrong url
+            config.dbPath = "sync_db"
+        })
+        let failureExpectation = XCTestExpectation(description: "failure sync")
+        let failureObserver = NotificationCenter.default.addObserver(forName: Notification.Name.actionAwareTimezoneSyncCompletion,
+                                                                     object: sensor2, queue: .main) { (notification) in
+                                                                        if let userInfo = notification.userInfo{
+                                                                            if let status = userInfo["status"] as? Bool {
+                                                                                if status == false {
+                                                                                    failureExpectation.fulfill()
+                                                                                }
+                                                                            }
+                                                                        }
+        }
+        if let engine = sensor2.dbEngine as? RealmEngine {
+            engine.removeAll(TimezoneData.self)
+            for _ in 0..<100 {
+                engine.save(TimezoneData())
+            }
+        }
+        sensor2.sync(force: true)
+        wait(for: [failureExpectation], timeout: 20)
+        NotificationCenter.default.removeObserver(failureObserver)
+        
+        #endif
+    }
+
     
 }
