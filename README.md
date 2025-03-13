@@ -1,16 +1,28 @@
 # AWARE: Timezone
 
-[![CI Status](https://img.shields.io/travis/awareframework/com.awareframework.ios.sensor.timezone.svg?style=flat)](https://travis-ci.org/awareframework/com.awareframework.ios.sensor.timezone)
-[![Version](https://img.shields.io/cocoapods/v/com.awareframework.ios.sensor.timezone.svg?style=flat)](https://cocoapods.org/pods/com.awareframework.ios.sensor.timezone)
-[![License](https://img.shields.io/cocoapods/l/com.awareframework.ios.sensor.timezone.svg?style=flat)](https://cocoapods.org/pods/com.awareframework.ios.sensor.timezone)
-[![Platform](https://img.shields.io/cocoapods/p/com.awareframework.ios.sensor.timezone.svg?style=flat)](https://cocoapods.org/pods/com.awareframework.ios.sensor.timezone)
+[![Swift Package Manager compatible](https://img.shields.io/badge/Swift%20Package%20Manager-compatible-brightgreen.svg)](https://github.com/apple/swift-package-manager)
 
 The timezone sensor keeps track of the user’s current timezone.
 
 ## Requirements
-iOS 10 or later
+iOS 13 or later
 
 ## Installation
+
+
+You can integrate this framework into your project via Swift Package Manager (SwiftPM) or CocoaPods.
+
+### SwiftPM
+1. Open Package Manager Windows
+    * Open `Xcode` -> Select `Menu Bar` -> `File` -> `App Package Dependencies...` 
+
+2. Find the package using the manager
+    * Select `Search Package URL` and type `git@github.com:awareframework/com.awareframework.ios.sensor.timezeon.git`
+
+3. Import the package into your target.
+
+
+### CocoaPods
 
 com.awareframework.ios.sensor.timezone is available through [CocoaPods](https://cocoapods.org). 
 
@@ -87,7 +99,7 @@ class Observer:TimezoneObserver{
 
 ## Author
 
-Yuuki Nishiyama, yuuki.nishiyama@oulu.fi
+Yuuki Nishiyama (The University of Tokyo), nishiyama@csis.u-tokyo.ac.jp
 
 ## License
 

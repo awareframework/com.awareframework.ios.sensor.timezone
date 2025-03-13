@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'com.awareframework.ios.sensor.timezone'
-  s.version       = '0.4.0'
+  s.version       = '0.7.0'
   s.summary          = 'A Timezone Sensor Module for AWARE Framework.'
 
 # This description is used to generate tags and improve search results.
@@ -24,23 +24,16 @@ The timezone sensor keeps track of the user’s current timezone.
   s.homepage         = 'https://github.com/awareframework/com.awareframework.ios.sensor.timezone'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'Apache2', :file => 'LICENSE' }
-  s.author           = { 'tetujin' => 'tetujin@ht.sfc.keio.ac.jp' }
+  s.author           = { 'Yuuki Nishiyama' => 'nishiyama@csis.u-tokyo.ac.jp' }
   s.source           = { :git => 'https://github.com/awareframework/com.awareframework.ios.sensor.timezone.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.ios.deployment_target = '10.0'
+  s.ios.deployment_target = '13.0'
   
-  s.swift_version = '4.2'
+  s.swift_version = '5'
 
   s.source_files = 'com.awareframework.ios.sensor.timezone/Classes/**/*'
   
-  # s.resource_bundles = {
-  #   'com.awareframework.ios.sensor.timezone' => ['com.awareframework.ios.sensor.timezone/Assets/*.png']
-  # }
-
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
-  s.dependency 'com.awareframework.ios.sensor.core', '~> 0.4.1'
+  s.dependency 'com.awareframework.ios.sensor.core', '~> 0.7.7'
   
 end
