@@ -7,7 +7,7 @@
 
 import UIKit
 import SwiftyJSON
-import com_awareframework_ios_sensor_core
+import com_awareframework_ios_core
 
 extension Notification.Name{
     public static let actionAwareTimezone = Notification.Name(TimezoneSensor.ACTION_AWARE_TIMEZONE)
@@ -120,7 +120,7 @@ public class TimezoneSensor: AwareSensor {
     
     public override func sync(force: Bool = false) {
         if let engine = self.dbEngine{
-            engine.startSync(TimezoneData.TABLE_NAME, TimezoneData.self, DbSyncConfig.init().apply{config in
+            engine.startSync(DbSyncConfig.init().apply{config in
                 config.debug = self.CONFIG.debug
                 config.dispatchQueue = DispatchQueue(label: "com.awareframework.ios.sensor.timezone.sync.queue")
                 config.completionHandler = { (status, error) in
@@ -154,12 +154,12 @@ public class TimezoneSensor: AwareSensor {
     
     func saveTimezoneData(_ timezoneId:String) {
         
-        let tzData = TimezoneData()
+        var tzData = TimezoneData()
         tzData.timezoneId = timezoneId
         tzData.label = self.CONFIG.label
         
         if let engine = self.dbEngine{
-            engine.save(tzData)
+            engine.save([tzData])
         }
         
         if let observer = self.CONFIG.sensorObserver {
