@@ -96,6 +96,9 @@ public class TimezoneSensor: AwareSensor {
         super.init()
         CONFIG = config
         initializeDbEngine(config: config)
+        super.syncConfig = DbSyncConfig().apply { c in
+            c.dispatchQueue = DispatchQueue(label: "com.awareframework.ios.sensor.timezone.sync.queue")
+        }
     }
     
     public override func start() {
@@ -119,22 +122,15 @@ public class TimezoneSensor: AwareSensor {
     }
     
     public override func sync(force: Bool = false) {
-        if let engine = self.dbEngine{
-            engine.startSync(DbSyncConfig.init().apply{config in
-                config.debug = self.CONFIG.debug
-                config.dispatchQueue = DispatchQueue(label: "com.awareframework.ios.sensor.timezone.sync.queue")
-                config.completionHandler = { (status, error) in
-                    var userInfo: Dictionary<String,Any> = [TimezoneSensor.EXTRA_STATUS :status]
-                    if let e = error {
-                        userInfo[TimezoneSensor.EXTRA_ERROR] = e
-                    }
-                    self.notificationCenter.post(name: .actionAwareTimezoneSyncCompletion ,
-                                                 object: self,
-                                                 userInfo:userInfo)
-                }
-            })
-            self.notificationCenter.post(name:.actionAwareTimezoneSync, object: self)
+        guard let engine = self.dbEngine, let syncConfig = self.syncConfig else { return }
+        syncConfig.debug = self.CONFIG.debug
+        syncConfig.completionHandler = { (status, error) in
+            var userInfo: Dictionary<String,Any> = [TimezoneSensor.EXTRA_STATUS: status]
+            if let e = error { userInfo[TimezoneSensor.EXTRA_ERROR] = e }
+            self.notificationCenter.post(name: .actionAwareTimezoneSyncCompletion, object: self, userInfo: userInfo)
         }
+        engine.startSync(syncConfig)
+        self.notificationCenter.post(name: .actionAwareTimezoneSync, object: self)
     }
     
     func retrieveTimezone(){

@@ -10,7 +10,7 @@ public struct TimezoneData: BaseDbModelSQLite {
     public var timezone: Int = AwareUtils.getTimeZone()
     public var os: String = "iOS"
     public var jsonVersion: Int = 1
-    public static let databaseTableName = "timezoneData"
+    public static let databaseTableName = "ios_timezone"
 
     public var timezoneId: String = ""
 

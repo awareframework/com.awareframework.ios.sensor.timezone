@@ -17,7 +17,7 @@ You can integrate this framework into your project via Swift Package Manager (Sw
     * Open `Xcode` -> Select `Menu Bar` -> `File` -> `App Package Dependencies...` 
 
 2. Find the package using the manager
-    * Select `Search Package URL` and type `git@github.com:awareframework/com.awareframework.ios.sensor.timezeon.git`
+    * Select `Search Package URL` and type `git@github.com:awareframework/com.awareframework.ios.sensor.timezone.git`
 
 3. Import the package into your target.
 
@@ -54,14 +54,15 @@ Class to hold the configuration of the sensor.
 
 ### Timezone Data
 
-| Field      | Type   | Description                                                                  |
-| ---------- | ------ | ---------------------------------------------------------------------------- |
-| timezoneId | String | the timezone ID string, i.e., “America/Los_Angeles, GMT-08:00”  |
-| deviceId   | String | AWARE device UUID                                                            |
-| label      | String | Customizable label. Useful for data calibration or traceability              |
-| timestamp  | Long   | unixtime milliseconds since 1970                                             |
-| timezone   | Int    | Timezone of the device                                                       |
-| os         | String | Operating system of the device (ex. android)                                 |
+| Field       | Type   | Description                                                                  |
+| ----------- | ------ | ---------------------------------------------------------------------------- |
+| timezoneId  | String | the timezone ID string, i.e., “America/Los_Angeles, GMT-08:00”               |
+| deviceId    | String | AWARE device UUID                                                            |
+| label       | String | Customizable label. Useful for data calibration or traceability              |
+| timestamp   | Int64  | unixtime milliseconds since 1970                                             |
+| timezone    | Int    | Timezone of the device                                                       |
+| os          | String | Operating system of the device (ex. ios)                                     |
+| jsonVersion | Int    | JSON schema version                                                          |
 
 ## Example usage
 
@@ -69,7 +70,6 @@ Class to hold the configuration of the sensor.
 let timezoneSensor = TimezoneSensor.init(TimezoneSensor.Config().apply{ config in
     config.sensorObserver = Observer()
     config.debug = true
-    config.dbType = .REALM
 })
 timezoneSensor?.start()
 ```
