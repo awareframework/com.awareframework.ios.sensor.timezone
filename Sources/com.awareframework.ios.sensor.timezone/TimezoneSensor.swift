@@ -151,6 +151,7 @@ public class TimezoneSensor: AwareSensor {
     func saveTimezoneData(_ timezoneId:String) {
         
         var tzData = TimezoneData()
+        tzData.timestamp = Int64(Date().timeIntervalSince1970 * 1000)
         tzData.timezoneId = timezoneId
         tzData.label = self.CONFIG.label
         
