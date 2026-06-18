@@ -14,20 +14,20 @@ You can integrate this framework into your project via Swift Package Manager (Sw
 
 ### SwiftPM
 1. Open Package Manager Windows
-    * Open `Xcode` -> Select `Menu Bar` -> `File` -> `App Package Dependencies...` 
+    * Open `Xcode` -> Select `Menu Bar` -> `File` -> `App Package Dependencies...`
 
 2. Find the package using the manager
     * Select `Search Package URL` and type `git@github.com:awareframework/com.awareframework.ios.sensor.timezone.git`
 
 3. Import the package into your target.
 
-## Public functions
+## Public Functions
 
 ### TimezoneSensor
 
-* `init(config:TimezoneSensor.Config?)` : Initializes the timezone sensor with the optional configuration.
-* `start()`: Starts the timezone sensor with the optional configuration.
-* `stop()`: Stops the service.
++ `init(config:TimezoneSensor.Config?)`: Initializes the timezone sensor with the optional configuration.
++ `start()`: Starts the timezone sensor with the optional configuration.
++ `stop()`: Stops the service.
 
 
 ### TimezoneSensor.Config
@@ -37,18 +37,18 @@ Class to hold the configuration of the sensor.
 #### Fields
 
 + `sensorObserver: TimezoneObserver`: Callback for live data updates.
-+ `enabled: Boolean` Sensor is enabled or not. (default = `false`)
-+ `debug: Boolean` enable/disable logging to `Logcat`. (default = `false`)
-+ `label: String` Label for the data. (default = "")
-+ `deviceId: String` Id of the device that will be associated with the events and the sensor. (default = "")
-+ `dbEncryptionKey` Encryption key for the database. (default = `null`)
-+ `dbType: Engine` Which db engine to use for saving data. (default = `Engine.DatabaseType.NONE`)
-+ `dbPath: String` Path of the database. (default = "aware_timezone")
-+ `dbHost: String` Host for syncing the database. (default = `null`)
++ `enabled: Bool`: Sensor is enabled or not. (default = `false`)
++ `debug: Bool`: Enable/disable logging. (default = `false`)
++ `label: String`: Label for the data. (default = `""`)
++ `deviceId: String`: Id of the device that will be associated with the events and the sensor. (default = `""`)
++ `dbEncryptionKey: String?`: Encryption key for the database. (default = `nil`)
++ `dbType: DatabaseType`: Which db engine to use for saving data. (default = `.none`)
++ `dbPath: String`: Path of the database. (default = `"aware_timezone"`)
++ `dbHost: String?`: Host for syncing the database. (default = `nil`)
 
 ## Broadcasts
 
-+ `TimezoneSensor.ACTION_AWARE_TIMEZONE` broadcasted when there is new timezone information. Extra includes `TimezoneSensor.EXTRA_DATA` for the new timezone.
++ `TimezoneSensor.ACTION_AWARE_TIMEZONE`: broadcasted when there is new timezone information. Extra includes `TimezoneSensor.EXTRA_DATA` for the new timezone.
 
 ## Data Representations
 
@@ -64,10 +64,10 @@ Class to hold the configuration of the sensor.
 | os          | String | Operating system of the device (ex. ios)                                     |
 | jsonVersion | Int    | JSON schema version                                                          |
 
-## Example usage
+## Example Usage
 
 ```swift
-let timezoneSensor = TimezoneSensor.init(TimezoneSensor.Config().apply{ config in
+let timezoneSensor = TimezoneSensor.init(TimezoneSensor.Config().apply { config in
     config.sensorObserver = Observer()
     config.debug = true
 })
