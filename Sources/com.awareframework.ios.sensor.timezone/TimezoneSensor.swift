@@ -78,6 +78,7 @@ public class TimezoneSensor: AwareSensor {
         
         public override init(){
             super.init()
+            dbTableName = TimezoneData.databaseTableName
             dbPath = "aware_timezone"
         }
         
@@ -92,10 +93,32 @@ public class TimezoneSensor: AwareSensor {
         self.init(Config())
     }
     
+
+    /// Creates this sensor's table if it does not exist yet, so that the first save does not fail.
+    /// Failures are logged: without the table, the data cannot be saved or uploaded.
+    private func initializeTables() {
+        guard CONFIG.dbType == .sqlite else { return }
+        guard let queue = (dbEngine as? SQLiteEngine)?.getSQLiteInstance() else {
+            print(TimezoneSensor.TAG, "[Error] Cannot open the database '\(CONFIG.dbPath)'. The table is not created.")
+            return
+        }
+        let tables: [(name: String, create: () throws -> Void)] = [
+            (TimezoneData.databaseTableName, { try TimezoneData.createTable(queue: queue) }),
+        ]
+        for table in tables {
+            do {
+                try table.create()
+            } catch {
+                print(TimezoneSensor.TAG, "[Error] Cannot create the table '\(table.name)': \(error)")
+            }
+        }
+    }
+
     public init(_ config:TimezoneSensor.Config){
         super.init()
         CONFIG = config
         initializeDbEngine(config: config)
+        initializeTables()
         super.syncConfig = DbSyncConfig().apply { c in
             c.dispatchQueue = DispatchQueue(label: "com.awareframework.ios.sensor.timezone.sync.queue")
         }
